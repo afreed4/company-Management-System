@@ -1,0 +1,90 @@
+{% extends 'admin_templates/base.html' %}
+
+{% block main_content %}
+
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View and Edit Companys</title>
+</head>
+<body>
+    <table class="table table-hover text-nowrap">
+        <thead>
+            <tr>
+            <th>Company Name</th>
+            <th>Contact Number</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Logo</th>
+            </tr>
+        </thead>
+        <tbody>
+          
+            <tr>
+            <td>{{ company_details.company_name }}</td>
+            <td>{{ company_details.contact_number }}</td>
+            <td>{{ company_details.address }}</td>
+            <td>{{ company_details.email }}</td>
+            <td><img src="{{ company_details.logo.url }}" alt="Logo" style="width:50px;height:50px;"></td>
+              
+            <td>
+                <a href="{% url 'admin_edit_companys' company_details.id %}" class="btn btn-success">Edit</a>
+            </td>
+            
+
+            <td>
+            </td>
+            </tr>
+           
+        </tbody>
+        </table>
+
+
+
+    <table class="table table-hover text-nowrap">
+        <thead>
+            <tr>
+            <th>First Name</th>
+            <th>Last Number</th>
+            <th>Contact Number</th>
+            <th>Staff Role</th>
+            <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for x in staff_members %}
+            <tr>
+            <td>{{ x.first_name }}</td>
+            <td>{{ x.last_name }}</td>
+            <td>{{ x.contact_number }}</td>
+            {% if x.staff_type == 'employee' %}
+            <td>{{ x.staff_type }} ({{ x.department_role }}) </td>
+            {% else %}
+             <td>{{ x.staff_type }}</td>
+             {% endif %}
+            <td>{{ x.email }}</td>
+              
+            <td>
+                <a href="#" class="btn btn-success">Edit</a>
+            </td>
+            
+            <td>
+            </td>
+            </tr>
+           {% endfor %}
+
+           
+        </tbody>
+        </table>
+</body>
+
+</html>
+{% endblock main_content %}
+{% include 'admin_templates/sidebar_template.html' %}
+
+

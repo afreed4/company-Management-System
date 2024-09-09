@@ -1,0 +1,57 @@
+{% extends 'manager_templates/base.html' %}
+
+{% block main_content %}
+{% load static %}
+
+<section class="content"></section>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Leave Requests List -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Leave Requests</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Request</th>
+                                    <th>Requested Date</th>
+                                    <th>Department</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in leave_request %}
+                                <tr>
+                                    <td>{{ request.requested_by.username }}</td>
+                                    <td>{{ request.request }}</td>
+                                    <td>{{ request.requested_date }}</td>
+                                    <td>{{ request.department.name }}</td>
+
+                                    <td>
+                                        <a href="{% url 'replay_for_leave_request' request.id %}" class="btn btn-info">Replay</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4">No leave requests found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% include 'manager_templates/side_bar.html' %}
+
+{% endblock main_content %}

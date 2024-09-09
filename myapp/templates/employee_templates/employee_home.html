@@ -1,0 +1,55 @@
+{% extends 'employee_templates/base.html' %}
+
+
+{% block main_content %}
+{% load static %}
+<h3>Company:{{ company }}</h3>
+<br>
+<br>
+
+<h3>Department:{{ department }}</h3>
+
+<table class="table table-hover text-nowrap">
+    <thead>
+        <tr>
+        <th>Contact Number</th>
+        <th>Username</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email Adress</th>
+        <th>Salary</th>
+        <th>Job role</th>
+       
+        </tr>
+    </thead>
+    <tbody>
+       
+        <tr>
+        <td>{{ employee_details.contact_number }}</td>
+        <td>{{ employee_details.username }}</td>
+        <td>{{ employee_details.first_name }}</td>
+        <td>{{ employee_details.last_name }}</td>
+        <td>{{ employee_details.email }}</td>
+        <td>{{ employee_details.salary }}</td>
+        <td>{{ employee_details.staff_type }}</td>
+        
+        <td>
+           
+         <a href="" class="btn btn-success">Edit</a>
+              
+        </td>
+        </tr>
+       
+        
+
+        
+       
+    </tbody>
+    </table>
+
+
+
+
+{% include 'employee_templates/side_bar.html' %}
+
+{% endblock main_content %}

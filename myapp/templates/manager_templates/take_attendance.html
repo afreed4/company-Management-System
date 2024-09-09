@@ -1,0 +1,190 @@
+{% extends 'manager_templates/base.html' %}
+
+
+{% block main_content %}
+{% load static %}
+
+<head>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.min.css" rel="stylesheet" />
+<script src="https://unpkg.com/fullcalendar@5.10.1/main.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include FullCalendar JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
+</head>
+
+<style>
+    #calendar {
+        width: 990px; /* Set the width of the calendar */
+        height: 500px; /* Set the height of the calendar */
+        margin-left: 60px;
+    }
+    
+    .fc-day {
+        padding: 15px; /* Adjust padding to make day cells smaller */
+        font-size: 15px; /* Adjust font size to make text smaller */
+    }
+    
+    .red-text{
+       color: red !important;
+       height: 20px;
+    }
+    
+    .btn1{
+      background-color: green !important;
+    }
+</style>
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Attendance</h3>
+</div>
+<div id="calendar"></div>
+
+<button type="button" id="clockInBtn" class="btn btn-success">Clock In</button>
+
+<button type="button" id="clockOutBtn" class="btn btn-danger">Clock Out</button>
+
+{% comment %} Display Messages {% endcomment %}
+{% if messages %}
+<div class="form-group">
+<div class="col-12">
+    {% for message in messages %}
+    {% if message.tags == "error" %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+    {% elif message.tags == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+    {% endif %}
+    {% endfor %}
+</div>
+</div>
+{% endif %}
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        // Your options here
+        initialView: 'dayGridMonth', // Example view
+        events: [
+            // Example events
+            {
+                title: 'Event 1',
+                start: '2024-05-01',
+                end: '2024-05-02'
+            },
+            {
+                title: 'Event 2',
+                start: '2024-05-05'
+            }
+        ],
+        dayCellDidMount: function(info) {
+            // Create radio buttons
+            var radio1 = document.createElement('input');
+            radio1.type = 'radio';
+            radio1.name = 'radio_' + info.date.toISOString(); // Unique name for each day
+            radio1.value = 'Present';
+            radio1.id = 'present_' + info.date.toISOString(); // Unique id for each button
+            var label1 = document.createElement('label');
+            label1.innerHTML = 'Present';
+            label1.htmlFor = 'present_' + info.date.toISOString();
+
+            var radio2 = document.createElement('input');
+            radio2.type = 'radio';
+            radio2.name = 'radio_' + info.date.toISOString(); // Same name as radio1
+            radio2.value = 'Absent';
+            radio2.id = 'absent_' + info.date.toISOString(); // Unique id for each button
+            var label2 = document.createElement('label');
+            label2.innerHTML = 'Absent';
+            label2.htmlFor = 'absent_' + info.date.toISOString();
+
+            // Append radio buttons to the day cell
+            // info.el.appendChild(radio1);
+            // info.el.appendChild(label1);
+            // info.el.appendChild(radio2);
+            // info.el.appendChild(label2);
+
+            // Add event listeners to radio buttons
+            radio1.addEventListener('click', function() {
+                if(this.checked){
+                    this.classList.add('btn1')
+                }else{
+                    this.classList.remove('btn1')
+                }
+                
+            });
+
+            radio2.addEventListener('click', function() {
+                console.log('Absent button clicked');
+            });
+        }
+    });
+    calendar.render();
+});
+
+    </script>
+
+<script>
+  
+
+var csrfToken = '{{ csrf_token }}';
+
+// Clock In Action
+$('#clockInBtn').on('click', function() {
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'take_attendance' id %}",
+        data: {
+            'csrfmiddlewaretoken': csrfToken,
+            'action': 'clock_in',  
+        },
+        success: function(response) {
+            alert('Clocked in successfully!');
+            window.location.reload(); 
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            alert('Error clocking in. Try again.');
+        }
+    });
+});
+
+// Clock Out Action
+$('#clockOutBtn').on('click', function() {
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'take_attendance' id %}",
+        data: {
+            'csrfmiddlewaretoken': csrfToken,
+            'action': 'clock_out',  
+        },
+        success: function(response) {
+            alert('Clocked out successfully!');
+            window.location.reload(); 
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            alert('Error clocking out. Try again.');
+        }
+    });
+});
+    </script>
+
+
+{% include 'manager_templates/side_bar.html' %}
+
+{% endblock main_content %}

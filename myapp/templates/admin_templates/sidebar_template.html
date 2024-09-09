@@ -1,0 +1,77 @@
+{% load static %}
+
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<aside class="main-sidebar sidebar-light-caution elevation-4">
+      
+      
+        <span class="brand-text font-weight-light">Administrator</span>
+     
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <img src="{% static 'dist/img/user2-160x160.jpg' %}" class="img-circle elevation-2" alt="User Image">
+          </div>
+          <div class="info">
+            <p style="color: white;">{{ username }}</p>
+           </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+                with font-awesome or any other icon font library -->
+
+            <li class="nav-item">
+                <a href="{% url 'admin_home' %}">
+                <i class="nav-icon fa-solid fa-house-user"></i>
+                <p>
+                  Home
+                </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'admin_company_view' %}">
+                <i class="nav-icon fa-solid fa-file-circle-plus"></i>
+                <p>
+                  Read Edit Company and staff
+                </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'admin_add_staff' %}">
+                  <i class="nav-icon fa-solid fa-user-plus"></i>
+                <p>
+                  Add Staff 
+                </p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'admin_staff_view' %}">
+                  <i class="fas fa-user-friends"></i>
+                <p>
+                  Edit delete and view staffs
+                </p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'compalints_view' %}">
+                  <i class='fas fa-poll-h' style='font-size:24px;color:red'></i>
+                <p>
+                  View complaints 
+                </p>
+                </a>
+            </li>
+
+           
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>

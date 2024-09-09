@@ -1,0 +1,387 @@
+{% extends 'company_management/base.html' %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+          <!-- Small boxes (Stat box) -->
+          <div class="row">
+                        <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3>{{ count }}</h3>
+
+                  <p>Edit and view companys</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{% url 'read_edit_company' %}" class="small-box-footer">Edit and view companys <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                <div class="inner">
+                  <h3>Register Companys</h3>
+
+                  <p>Total Company Registration</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{% url 'add_company' %}" class="small-box-footer">Register Companys <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <h3>Add Staff</h3>
+
+                  <p>Total Staffs</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{% url 'add_staff_save' %}" class="small-box-footer">Add Staff<i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            
+            
+            
+          </div>
+          <!-- /.row -->
+          <div class="row">
+            <div class="col-lg-6">
+              <!-- DONUT CHART -->
+              <div class="card card-secondary" id="myDiv">
+                <div class="card-header">
+                    <h3 class="card-title">Total staff</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <form>
+                        <canvas id="staffCountChart" style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+                        <label for="month_staff">Month:</label>
+                        <select name="month_staff" class="form-control" id="staff-month-select"></select><br>
+                        <label for="year_staff">Year:</label>
+                        <select name="year_staff" class="form-control" id="staff-year-select"></select>
+                    </form>
+                </div>
+            </div>
+              <!-- /.card -->
+              
+            </div>
+
+            <div class="col-lg-6">
+              <!-- DONUT CHART -->
+              <div class="card card-success">
+                <div class="card-header">
+                  <h3 class="card-title">Total Company Registration</h3>
+
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <form>
+                    <canvas id="Chart2" style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+                    <label for="month">Month:</label>
+                    <select name="month_cons" class="form-control" id="month-Select-1">
+                    </select><br>
+                    <label for="year">Year:</label>
+                    <select name="year_cons" class="form-control" id="year-select-1"></select>
+                  </form>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+              
+            </div>
+          </div>
+
+                   
+                <!-- </tbody>
+                </table> -->
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        
+        </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}
+
+  {% block custom_js %}
+
+  <script>
+   
+
+//-------ajax for retrive company count to chart--------------
+$(document).ready(function() {
+
+var currentYear = new Date().getFullYear();
+
+// Populate the year dropdown for company count
+var companyYearDropdown = document.getElementById("year-select-1");
+for (var year = 2015; year <= currentYear; year++) {
+    var option = document.createElement("option");
+    option.value = year;
+    option.text = year;
+    companyYearDropdown.appendChild(option);
+}
+
+// Populate the month dropdown for company count
+var companyMonthDropdown = document.getElementById("month-Select-1");
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+for (var i = 1; i <= 12; i++) {
+    var option = document.createElement("option");
+    option.value = i;
+    option.text = months[i - 1];
+    companyMonthDropdown.appendChild(option);
+}
+
+// Handle change event to update the chart
+companyMonthDropdown.addEventListener('change', updateCompanyChart);
+companyYearDropdown.addEventListener('change', updateCompanyChart);
+
+function updateCompanyChart() {
+    var selectedMonth = companyMonthDropdown.value;
+    var selectedYear = companyYearDropdown.value;
+    loadCompanyCounts(selectedMonth, selectedYear);
+}
+
+function loadCompanyCounts(month, year) {
+    const data = { month: month, year: year };
+    console.log('Sending data:', data);  // Verify the data being sent
+    const queryParams = new URLSearchParams();
+    queryParams.append('data', JSON.stringify(data));
+
+    const url = '/update_company_count_company_manage/?' + queryParams.toString();
+    fetch(url)
+        .then(response => response.json())
+        .then(jsonData => {
+            console.log('Received data:', jsonData);  // Verify the data received
+            var companyCount = jsonData.company_count;
+            drawCompanyChart(companyCount);
+        })
+        .catch(error => {
+            console.log('Error:', error);  // Log any errors
+        });
+}
+
+var companyChart;
+function drawCompanyChart(companyCount) {
+    var companyChartCanvas = $('#Chart2').get(0).getContext('2d');
+    var companyData = {
+        labels: ['Total Companies'],
+        datasets: [{
+            data: [companyCount],
+            backgroundColor: ['#00a65a']
+        }]
+    };
+    var companyOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+    };
+
+    if (!companyChart) {
+        companyChart = new Chart(companyChartCanvas, {
+            type: 'doughnut',
+            data: companyData,
+            options: companyOptions
+        });
+    } else {
+        companyChart.data.datasets[0].data = [companyCount];
+        companyChart.update();
+    }
+}
+
+
+
+
+//-------ajax for retrive staff count to chart--------------
+
+
+var currentYear = new Date().getFullYear();
+
+
+var yearDropdown = document.getElementById("year-select-1");
+for (var year = 2015; year <= currentYear; year++) {
+    var option = document.createElement("option");
+    option.value = year;
+    option.text = year;
+    yearDropdown.appendChild(option);
+}
+
+
+var monthDropdown = document.getElementById("month-Select-1");
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+for (var i = 1; i <= 12; i++) {
+    var option = document.createElement("option");
+    option.value = i;
+    option.text = months[i - 1];
+    monthDropdown.appendChild(option);
+}
+
+
+monthDropdown.addEventListener('change', updateStaffChart);
+yearDropdown.addEventListener('change', updateStaffChart);
+
+function updateStaffChart() {
+    var selectedMonth = monthDropdown.value;
+    var selectedYear = yearDropdown.value;
+    loadStaffCounts(selectedMonth, selectedYear);
+}
+
+function loadStaffCounts(month, year) {
+    $.ajax({
+        url: '/update_staff_count_company_manage/',  
+        data: {
+            'month': month,
+            'year': year
+        },
+        success: function(data) {
+            var staffCount = data.staff_count;
+            drawStaffChart(staffCount);
+        },
+        error: function(xhr, status, error) {
+            console.log('Error: ' + error);
+        }
+    });
+}
+
+var staffChart;
+function drawStaffChart(staffCount) {
+    var staffChartCanvas = $('#Chart2').get(0).getContext('2d');
+    var staffData = {
+        labels: ['Total Staff'],
+        datasets: [{
+            data: [staffCount],
+            backgroundColor: ['#5a5b60']
+        }]
+    };
+    var staffOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+    };
+
+    if (!staffChart) {
+        staffChart = new Chart(staffChartCanvas, {
+            type: 'doughnut',
+            data: staffData,
+            options: staffOptions
+        });
+    } else {
+        staffChart.data.datasets[0].data = [staffCount];
+        staffChart.update();
+    }
+}
+
+var currentYear = new Date().getFullYear();
+
+// Populate the year dropdown for staff count
+var staffYearDropdown = document.getElementById("staff-year-select");
+for (var year = 2015; year <= currentYear; year++) {
+    var option = document.createElement("option");
+    option.value = year;
+    option.text = year;
+    staffYearDropdown.appendChild(option);
+}
+
+// Populate the month dropdown for staff count
+var staffMonthDropdown = document.getElementById("staff-month-select");
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+for (var i = 1; i <= 12; i++) {
+    var option = document.createElement("option");
+    option.value = i;
+    option.text = months[i - 1];
+    staffMonthDropdown.appendChild(option);
+}
+
+// Handle change event to update the chart
+staffMonthDropdown.addEventListener('change', updateStaffChart);
+staffYearDropdown.addEventListener('change', updateStaffChart);
+
+function updateStaffChart() {
+    var selectedMonth = staffMonthDropdown.value;
+    var selectedYear = staffYearDropdown.value;
+    loadStaffCounts(selectedMonth, selectedYear);
+}
+
+function loadStaffCounts(month, year) {
+    const data = { month: month, year: year };
+    console.log('Sending data:', data);  // Verify the data being sent
+    const queryParams = new URLSearchParams();
+    queryParams.append('data', JSON.stringify(data));
+
+    const url = '/update_staff_count_company_manage/?' + queryParams.toString();
+    fetch(url)
+        .then(response => response.json())
+        .then(jsonData => {
+            console.log('Received data:', jsonData);  // Verify the data received
+            var staffCount = jsonData.staff_count;
+            drawStaffChart(staffCount);
+        })
+        .catch(error => {
+            console.log('Error:', error);  // Log any errors
+        });
+}
+
+
+var staffChart;
+function drawStaffChart(staffCount) {
+    var staffChartCanvas = $('#staffCountChart').get(0).getContext('2d');
+    var staffData = {
+        labels: ['Total Staff'],
+        datasets: [{
+            data: [staffCount],
+            backgroundColor: ['#5a5b60']
+        }]
+    };
+    var staffOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+    };
+
+    if (!staffChart) {
+        staffChart = new Chart(staffChartCanvas, {
+            type: 'doughnut',
+            data: staffData,
+            options: staffOptions
+        });
+    } else {
+        staffChart.data.datasets[0].data = [staffCount];
+        staffChart.update();
+    }
+}
+
+
+});
+
+
+
+
+
+  </script>
+
+
+  {% endblock custom_js %}

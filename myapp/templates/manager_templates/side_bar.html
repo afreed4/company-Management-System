@@ -1,0 +1,79 @@
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  
+    <a href="" class="brand-link">
+      
+      <span class="brand-text font-weight-light">Manager</span>
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{% static 'dist/img/user2-160x160.jpg' %}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+         <p style="color: white;">{{ username }}</p>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+              with font-awesome or any other icon font library -->
+          
+
+          <li class="nav-item">
+                <i class='fas fa-user-plus' style='font-size:24px'></i>
+                <a href="{% url 'manager_add_staff' %}" class="d-block">Add Staff</a>
+              </p>
+          </li>
+
+          <li class="nav-item">
+            <a href="{% url 'manager_home' %}">
+                <i class="fa fa-home" style="font-size:24px"></i>
+            <p>
+             Home
+            </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{% url 'attendance' %}">
+                <i class='far fa-clipboard' style='font-size:24px'></i>
+            <p>
+             Take Attendance of staff
+            </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{% url 'attendance' %}">
+              <i class="fa fa-reorder" style="font-size:24px"></i>
+            <p>
+              Attendance report
+            </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'leave_request_view' %}">
+                <i class='far fa-clipboard' style='font-size:24px'></i>
+            <p>
+              Leave Requests
+            </p>
+            </a>
+          </li>
+          
+
+
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>

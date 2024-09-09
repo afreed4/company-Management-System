@@ -1,0 +1,33 @@
+
+{% extends 'employee_templates/base.html' %}
+
+
+{% block main_content %}
+{% load static %}
+
+<h2>Your Leave Requests</h2>
+<table class="table table-hover text-nowrap">
+    <thead>
+        <tr>
+            <th>Request</th>
+            <th>Response</th>
+            <th>Requested Date</th>
+            <th>Response Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in leave_requests %}
+        <tr>
+            <td>{{ request.request }}</td>
+            <td>{{ request.response|default:"No response yet" }}</td>
+            <td>{{ request.requested_date }}</td>
+            <td>{{ request.responsed_date|default:"N/A" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% include 'employee_templates/side_bar.html' %}
+
+{% endblock main_content %}

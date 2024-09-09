@@ -1,0 +1,56 @@
+{% extends 'company_management/base.html' %}
+
+{% block main_content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Companys</title>
+</head>
+<body>
+    <table class="table table-hover text-nowrap">
+        <thead>
+            <tr>
+            <th>Company Name</th>
+            <th>Contact Number</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Date Of Registration</th>
+            <th>Logo</th>
+            <th>Admin Staff</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>{{ company.company_name }}</td>
+            <td>{{ company.contact_number }}</td>
+            <td>{{ company.address }}</td>
+            <td>{{ company.email }}</td>
+            <td>{{ company.date_of_registration }}</td>
+            <td><img src="{{ company.logo.url }}" alt="Logo" style="width:50px;height:50px;"></td>
+            <td>
+                <ul>
+                    {% for staff in admin %}
+                        <li>{{ staff.username }} ({{ staff.contact_number }})</li>
+                    {% empty %}
+                        <li>No Admins</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+            </td>
+            </tr>
+           
+        </tbody>
+        </table>
+
+
+
+    
+</body>
+
+</html>
+{% endblock main_content %}
+{% include 'company_management/sidebar_template.html' %}
