@@ -1,0 +1,2 @@
+This project is for a multi-national company that manages several associated companies. The parent company oversees its connected subsidiaries, listing and managing them efficiently. Each associated company has its own set of staff roles, including an admin, HR manager, manager, and employees. The multi-national company assigns an admin to each subsidiary, allowing them to manage their respective staff. Company admins are responsible for managing their company’s operations, including adding and overseeing staff such as HR managers, managers, and employees.
+
